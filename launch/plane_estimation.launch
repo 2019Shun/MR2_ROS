@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<launch>
+    <!-- 30 degree -->
+    <node pkg="tf" type="static_transform_publisher" name="m_laser_link_2_m_laser"
+        args="0.0 0.0 0.0 0.0 0.52359 0.0 m_lidar_link m_lidar 10"/> 
+
+    <node pkg="tf" type="static_transform_publisher" name="m_base_link_2_m_lidar_link"
+        args="0.34 0.0 0.0 0 0.0 0.0 m_base_link m_lidar_link 10"/>
+    <node pkg="tf" type="static_transform_publisher" name="map_2_m_base_link"
+        args="0.0 0.0 0.4 0.0 0.0 0.0 map m_base_link 10"/>
+
+    <node pkg="tf" type="static_transform_publisher" name="base_link_2_lidar"
+        args="0.34 0.0 0.0 0.0 0.0 0.0 base_link lidar 10"/>
+
+    <!-- <node pkg="tf" type="static_transform_publisher" name="lidar_2_2dlidar"
+        args="0.0 0.0 -0.1 0.0 0.0 -1.57079632679 lidar 2dlidar 10"/> -->
+    <node pkg="tf" type="static_transform_publisher" name="lidar_2_2dlidar"
+        args="0.0 0.0 -0.1 0.0 0.0 1.57079632679 lidar 2dlidar 10"/>
+
+    <node name="plane_estimation_node" pkg="mr2_ros" type="plane_estimation_node" output="screen" respawn="true" >
+        <param name="footprint_frame" value="base_footprint"/>
+        <param name="base_frame" value="base_link"/>
+        <param name="laser_link_frame" value="laser"/>
+        <param name="pub_name" value="field_plane"/>
+        <param name="plane_remove" value="true"/>
+        <param name="plane_threshold" value="0.05"/>
+        <param name="sor_threshold" value="1.5"/>
+        <param name="filter_z_min" value="0.00"/>
+        <param name="filter_z_max" value="0.15"/>
+        <param name="voxel_value" value="0.02"/>
+
+        <param name="field_pc_x_max" value="2.3"/>
+        <param name="field_pc_x_min" value="-2.3"/>
+        <param name="field_pc_y_max" value="9.0"/>
+    </node>
+
+    <!-- <arg name="use_only_plane_estimation_node" default="true"/> -->
+    <arg name="use_only_plane_estimation_node" default="false"/>
+    <group if="$(arg use_only_plane_estimation_node)">
+        <node pkg="tf" type="static_transform_publisher" name="map_2_base_footprint"
+            args="0.5 0.7 0.0 0.0 0.0 0.0 map base_footprint 10"/>
+        <node name="rviz" pkg="rviz" type="rviz" args="-d $(find mr2_ros)/rviz/plane_estimation.rviz" required="true" />
+    </group>
+
+</launch>

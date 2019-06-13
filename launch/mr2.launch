@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<launch>
+    <include file="$(find mr2_ros)/launch/plane_estimation.launch" />
+    <include file="$(find mr2_ros)/launch/field_position.launch" />
+    <include file="$(find mr2_ros)/launch/yvt_35lx.launch" />
+    <!-- <include file="$(find mr2_ros)/launch/ust_10lx.launch" /> -->
+
+    <param name="robot_description" command="$(find xacro)/xacro.py $(find mr2_ros)/urdf/mr2.xacro" />
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" /> 
+
+    <node pkg="mr2_ros" name="field_detector_node" type="field_detector_node" output="screen" />
+    <!-- respawn="true" -->
+    <!-- <node name="rviz" pkg="rviz" type="rviz" args="-d $(find mr2_ros)/rviz/rviz.rviz" required="true" /> -->
+
+</launch>

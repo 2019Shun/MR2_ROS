@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<launch>
+    <node name="nucldo_node" pkg="rosserial_python" type="serial_node.py" output="screen">
+        <param name="port" value="/dev/ttyACM0" />
+        <param name="baud" value="115200" />
+    </node>
+
+    <node pkg="mr2_ros" name="field_position_node" type="field_position_node" output="screen">
+        <param name="init_x" value="0.5" />
+        <!-- <param name="init_x" value="2.5" /> -->
+        <param name="init_y" value="0.6" />
+    </node>
+
+</launch>

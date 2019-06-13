@@ -1,0 +1,219 @@
+<?xml version="1.0"?>
+<robot name="mr2" xmlns:xacro="http://ros.org/wiki/xacro">
+    <xacro:include filename="$(find mr2_ros)/urdf/common.xacro"/>
+
+    <link name="base_link">
+        <visual>
+            <geometry>
+                <box size="0.52 0.246 0.22" />
+            </geometry>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <material name="gray"/>
+        </visual>
+        <collision>
+            <geometry>
+                <box size="0.52 0.246 0.22" />
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="0.1"/>
+            <inertia ixx="0.001" ixy="0" ixz="0" iyy="0.001" iyz="0" izz="0.001"/>
+        </inertial>  
+    </link>
+
+    <xacro:macro name="leg_base" params="prefix">
+        <link name="${prefix}_base_link">
+            <visual>
+                <geometry>
+                    <cylinder radius="0.04" length="0.02"/>
+                </geometry>
+                <origin xyz="0 0 0" rpy="${pi/2} 0 0"/>
+                <material name="red"/>
+            </visual>
+            <inertial>
+                <mass value="1"/>
+                <inertia ixx="1" ixy="0" ixz="0" iyy="1" iyz="0" izz="1"/>
+            </inertial>  
+        </link>
+    </xacro:macro>
+
+    <joint name="leg1_joint" type="fixed">
+        <parent link="base_link"/>
+        <child  link="leg1_base_link"/>
+        <origin xyz="0.1725 -0.1484 -0.075" rpy="0 0 0"/>
+    </joint>
+    <xacro:leg_base prefix="leg1"/>
+
+    <joint name="leg2_joint" type="fixed">
+        <parent link="base_link"/>
+        <child  link="leg2_base_link"/>
+        <origin xyz="0.1725 0.1484 -0.075" rpy="0 0 0"/>
+    </joint>
+    <xacro:leg_base prefix="leg2"/>
+
+    <joint name="leg3_joint" type="fixed">
+        <parent link="base_link"/>
+        <child  link="leg3_base_link"/>
+        <origin xyz="-0.1725 -0.1484 -0.075" rpy="0 0 0"/>
+    </joint>
+    <xacro:leg_base prefix="leg3"/>
+
+    <joint name="leg4_joint" type="fixed">
+        <parent link="base_link"/>
+        <child  link="leg4_base_link"/>
+        <origin xyz="-0.1725 0.1484 -0.075" rpy="0 0 0"/>
+    </joint>
+    <xacro:leg_base prefix="leg4"/>
+
+    <xacro:macro name="leg" params="prefix parent">
+        <link name="${prefix}_top_link">
+            <visual>
+                <geometry>
+                    <box size="0.02 0.02 0.20" />
+                </geometry>
+                <material name="gray"/>
+                <origin rpy="0 0 0" xyz="0.0 0.0 0.10"/>
+            </visual>
+            <collision>
+                <geometry>
+                    <box size="0.02 0.02 0.02" />
+                </geometry>
+            </collision>
+            <inertial>
+                <mass value="0.5"/>
+                <inertia ixx="0.001" ixy="0" ixz="0" iyy="0.001" iyz="0" izz="0.001"/>
+            </inertial>  
+        </link>
+        <joint name="${prefix}_top_joint" type="fixed">
+            <parent link="${parent}"/>
+            <child link="${prefix}_top_link"/>
+            <!-- <origin rpy="0 ${-pi*98/180} 0" xyz="0 0 0"/> -->
+            <origin rpy="0 ${-pi*221/180} 0" xyz="0 0 0"/>
+            <axis xyz="0 -1 0" />
+            <dynamics damping="0.4"/>
+            <!-- <limit effort="1000000" lower="0" upper="${pi*164/180}" velocity="1.0"/> -->
+        </joint>
+
+        <link name="${prefix}_bottom_base_link">
+            <visual>
+                <geometry>
+                    <cylinder radius="0.02" length="0.02"/>
+                </geometry>
+                <origin xyz="0 0 0" rpy="${pi/2} 0 0"/>
+                <material name="red"/>
+            </visual>
+            <inertial>
+                <mass value="0.1"/>
+                <inertia ixx="1" ixy="0" ixz="0" iyy="1" iyz="0" izz="1"/>
+            </inertial>  
+        </link>
+        <joint name="${prefix}_bottom_base_joint" type="fixed">
+            <parent link="${prefix}_top_link"/>
+            <child  link="${prefix}_bottom_base_link"/>
+            <origin xyz="0.0 0.0 0.2" rpy="0 0 0"/>
+        </joint>
+
+        <link name="${prefix}_bottom_link">
+            <visual>
+                <geometry>
+                    <box size="0.02 0.02 0.20" />
+                </geometry>
+                <material name="gray"/>
+                <origin rpy="0 0 0" xyz="0.0 0.0 0.10"/>
+            </visual>
+            <collision>
+                <geometry>
+                    <box size="0.02 0.02 0.02" />
+                </geometry>
+            </collision>
+            <inertial>
+                <mass value="0.5"/>
+                <inertia ixx="0.001" ixy="0" ixz="0" iyy="0.001" iyz="0" izz="0.001"/>
+            </inertial>  
+        </link>
+        <joint name="${prefix}_bottom_joint" type="fixed">
+            <parent link="${prefix}_bottom_base_link"/>
+            <child link="${prefix}_bottom_link"/>
+            <!-- <origin rpy="0 ${-pi*141/180} 0" xyz="0 0 0"/> -->
+            <origin rpy="0 ${pi*97/180} 0" xyz="0 0 0"/>
+            <axis xyz="0 1 0" />
+            <dynamics damping="0.4"/>
+            <!-- <limit effort="1000000" lower="0" upper="${pi*164/180}" velocity="1.0"/> -->
+        </joint>
+
+        <link name="${prefix}_foot_link">
+            <visual>
+                <geometry>
+                    <cylinder radius="0.0075" length="0.15"/>
+                </geometry>
+                <material name="yellow"/>
+                <origin rpy="${pi/2} 0 0" xyz="0.0 0.0 0.0"/>
+            </visual>
+            <collision>
+                <geometry>
+                    <cylinder radius="0.0075" length="0.015"/>
+                </geometry>
+            </collision>
+            <inertial>
+                <mass value="0.1"/>
+                <inertia ixx="0.001" ixy="0" ixz="0" iyy="0.001" iyz="0" izz="0.001"/>
+            </inertial>  
+        </link>
+        <joint name="${prefix}_foot_joint" type="fixed">
+            <parent link="${prefix}_bottom_link"/>
+            <child  link="${prefix}_foot_link"/>
+            <origin xyz="0.0 0.0 0.2" rpy="0 0 0"/>
+        </joint>
+
+        <!-- ===============  Transmission =============== -->
+        <transmission name="${prefix}_top_trans">
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="${prefix}_top_joint">
+                <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+            </joint>
+            <actuator name="${prefix}_top_motor">
+                <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+                <mechanicalReduction>100</mechanicalReduction>
+            </actuator>
+        </transmission>
+        <transmission name="${prefix}_bottom_trans">
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="${prefix}_bottom_joint">
+                <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+            </joint>
+            <actuator name="${prefix}_bottom_motor">
+                <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+                <mechanicalReduction>100</mechanicalReduction>
+            </actuator>
+        </transmission>
+
+        <!-- ==================  Gazebo ================== -->
+        <gazebo reference="${prefix}_top_joint">
+            <implicitSpringDamper>1</implicitSpringDamper>
+        </gazebo>
+        <gazebo reference="${prefix}_bottom_joint">
+            <implicitSpringDamper>1</implicitSpringDamper>
+        </gazebo>
+
+        <gazebo reference="${prefix}_foot_link">
+            <mu1 value="1.0" />
+            <mu2 value="1.0" />
+            <kp value="100000" />
+            <kd value="1000" />
+            <material>Gazebo/Black</material>
+        </gazebo>
+    </xacro:macro>
+
+    <xacro:leg prefix="leg1" parent="leg1_base_link" />
+    <xacro:leg prefix="leg2" parent="leg2_base_link" />
+    <xacro:leg prefix="leg3" parent="leg3_base_link" />
+    <xacro:leg prefix="leg4" parent="leg4_base_link" />
+
+
+    <gazebo>
+        <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+            <robotNamespace>/mr2</robotNamespace>
+        </plugin>
+    </gazebo>
+
+</robot>

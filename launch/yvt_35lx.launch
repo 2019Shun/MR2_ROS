@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<launch>
+   <node pkg="hokuyo3d" type="hokuyo3d" name="hokuyo3d" required="true">
+        <param name="ip" value="192.168.0.10"/>
+        <param name="port" value="10940"/>
+        <param name="frame_id" value="m_lidar"/>
+        <param name="output_cycle" value="field"/>
+        <param name="horizontal_interlace_" value="1"/>
+        <param name="vertical_interlace" value="1"/>
+        <param name="range_min" value="0.6"/>
+    </node>
+</launch>
